@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<?php
+// جلب البيانات من الـ Controller
+$materials = isset($data['materials']) ? $data['materials'] : [];
+?>
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض المواد</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="../../../public/assets/Css/Master.css">
+</head>
+<body class="bg-gray-100 p-5">
+
+<div class="container mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-6">إدارة المواد</h1>
+
+    <!-- مربع البحث -->
+    <div class="flex justify-between items-center mb-4">
+        <input type="text" id="search" placeholder="ابحث عن مادة..." class="border p-2 rounded w-1/3">
+        <button class="bg-green-500 text-white px-4 py-2 rounded">إضافة مادة</button>
+    </div>
+
+    <!-- جدول عرض المواد -->
+    <div class="bg-white p-5 shadow-md rounded-lg">
+        <table class="w-full border-collapse border border-gray-200">
+            <thead class="bg-gray-200">
+            <tr>
+                <th class="border px-4 py-2">#</th>
+                <th class="border px-4 py-2">الاسم</th>
+                <th class="border px-4 py-2">المقاس</th>
+                <th class="border px-4 py-2">الوحدة</th>
+                <th class="border px-4 py-2">الكمية</th>
+                <th class="border px-4 py-2">الإجراءات</th>
+            </tr>
+            </thead>
+            <tbody id="materialsTable">
+            <?php foreach ($materials as $index => $material): ?>
+                <tr class="border">
+                    <td class="border px-4 py-2"><?= $index + 1 ?></td>
+                    <td class="border px-4 py-2"><?= htmlspecialchars($material['name']) ?></td>
+                    <td class="border px-4 py-2"><?= htmlspecialchars($material['size']) ?></td>
+                    <td class="border px-4 py-2"><?= htmlspecialchars($material['unit']) ?></td>
+                    <td class="border px-4 py-2"><?= htmlspecialchars($material['quantity']) ?></td>
+                    <td class="border px-4 py-2 flex gap-2">
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded">تعديل</button>
+                        <button class="bg-red-500 text-white px-3 py-1 rounded delete-btn" data-id="<?= $material['id'] ?>">حذف</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function() {
+        // تنفيذ البحث المباشر
+        $('#search').on('keyup', function() {
+            let query = $(this).val();
+            $.ajax({
+                url: '<?= BASE_URL ?>/materials/search',
+                method: 'POST',
+                data: { query: query },
+                success: function(response) {
+                    $('#materialsTable').html(response);
+                }
+            });
+        });
+
+        // تأكيد الحذف
+        $('.delete-btn').click(function() {
+            let materialId = $(this).data('id');
+            if (confirm('هل أنت متأكد أنك تريد حذف هذه المادة؟')) {
+                $.ajax({
+                    url: '<?= BASE_URL ?>/materials/delete',
+                    method: 'POST',
+                    data: { id: materialId },
+                    success: function(response) {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
+
+===============================================================================================================
+=========================================add matarial==========================================================
+document.addEventListener("DOMContentLoaded", function () {
+    loadBranches(); // تحميل الفروع عند تحميل الصفحة
+
+    document.getElementById("addMaterialForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let materialName = document.getElementById("material_name").value.trim();
+        let size = document.getElementById("size").value.trim();
+        let unit = document.getElementById("unit").value.trim();
+        let quantity = document.getElementById("quantity").value.trim();
+        let branch = document.getElementById("branch").value;
+
+        if (materialName === "" || quantity === "" || branch === "") {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("material_name", materialName);
+        formData.append("size", size);
+        formData.append("unit", unit);
+        formData.append("quantity", quantity);
+        formData.append("branch", branch);
+
+        fetch("/app/controllers/MaterialController.php?action=add", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Material added successfully!");
+                    document.getElementById("addMaterialForm").reset();
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    });
+});
+
+function loadBranches() {
+    fetch("/app/controllers/BranchController.php?action=list")
+        .then(response => response.json())
+        .then(data => {
+            let branchSelect = document.getElementById("branch");
+            branchSelect.innerHTML = '<option value="">Select Branch</option>';
+            data.branches.forEach(branch => {
+                let option = document.createElement("option");
+                option.value = branch.id;
+                option.textContent = branch.name;
+                branchSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error loading branches:", error));
+}
+
+========================================================================================================
+matariel controller
+
+<?php
+require_once "../app/models/Material.php";
+
+class MaterialController extends Controller {
+    private $materialModel;
+
+    public function __construct() {
+        $this->materialModel = new Material();
+    }
+
+    public function addMaterial() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $name = $_POST["name"];
+            $size = $_POST["size"];
+            $unit = $_POST["unit"];
+            $quantity = $_POST["quantity"];
+            $branch_id = $_POST["branch_id"];
+            $user_id = $_POST["user_id"];
+
+            if ($this->materialModel->addMaterial($name, $size, $unit, $quantity, $branch_id, $user_id)) {
+                echo json_encode(["status" => "success", "message" => "Material added successfully"]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Failed to add material"]);
+            }
+        }
+    }
+
+    public function getMaterials() {
+        $branch_id = $_GET["branch_id"];
+        $materials = $this->materialModel->getMaterialsByBranch($branch_id);
+        echo json_encode($materials);
+    }
+
+    public function deleteMaterial() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $id = $_POST["id"];
+            $user_id = $_POST["user_id"];
+            $branch_id = $_POST["branch_id"];
+
+            if ($this->materialModel->deleteMaterial($id, $user_id, $branch_id)) {
+                echo json_encode(["status" => "success", "message" => "Material deleted successfully"]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Failed to delete material"]);
+            }
+        }
+    }
+}
+===============================================================================================================
+
+$(document).ready(function() {
+    // تنفيذ البحث المباشر
+    $('#search').on('keyup', function() {
+        let query = $(this).val();
+        $.ajax({
+            url: '<?= BASE_URL ?>/materials/search',
+            method: 'POST',
+            data: { query: query },
+            success: function(response) {
+                $('#materialsTable').html(response);
+            }
+        });
+    });
+
+    // تأكيد الحذف
+    $('.delete-btn').click(function() {
+        let materialId = $(this).data('id');
+        if (confirm('هل أنت متأكد أنك تريد حذف هذه المادة؟')) {
+            $.ajax({
+                url: '<?= BASE_URL ?>/materials/delete',
+                method: 'POST',
+                data: { id: materialId },
+                success: function(response) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+============================================================
+document.addEventListener("DOMContentLoaded", function () {
+    loadBranches(); // تحميل الفروع عند تحميل الصفحة
+
+    document.getElementById("addMaterialForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let materialName = document.getElementById("material_name").value.trim();
+        let size = document.getElementById("size").value.trim();
+        let unit = document.getElementById("unit").value.trim();
+        let quantity = document.getElementById("quantity").value.trim();
+        let branch = document.getElementById("branch").value;
+
+        if (materialName === "" || quantity === "" || branch === "") {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("material_name", materialName);
+        formData.append("size", size);
+        formData.append("unit", unit);
+        formData.append("quantity", quantity);
+        formData.append("branch", branch);
+
+        fetch("/app/controllers/MaterialController.php?action=add", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Material added successfully!");
+                    document.getElementById("addMaterialForm").reset();
+                    loadMaterials(); // تحديث القائمة بعد الإضافة
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    });
+});

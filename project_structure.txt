@@ -1,0 +1,100 @@
+﻿Folder PATH listing for volume Windwos 10
+Volume serial number is CAEE-D683
+C:.
+│   .htaccess
+│   AppStructre.txt
+│   ChangendCode
+│   composer.json
+│   package-lock.json
+│   package.json
+│   project_structure.txt
+│   README.md
+│   tailwind.config.js
+│   
+├───.idea
+│       .gitignore
+│       .name
+│       MaterialMagement.iml
+│       modules.xml
+│       php.xml
+│       workspace.xml
+│       
+├───app
+│   ├───Controllers
+│   │       AddQuantityController.php
+│   │       BranchController.php
+│   │       DispenseMaterialController.php
+│   │       LiveSearchController.php
+│   │       MaterialController.php
+│   │       UserController.php
+│   │       
+│   ├───core
+│   │       autoloader.php
+│   │       Controller.php
+│   │       Database.php
+│   │       Model.php
+│   │       View.php
+│   │       
+│   ├───models
+│   │       Branch.php
+│   │       Dispense.php
+│   │       LiveSearch.php
+│   │       Material.php
+│   │       User.php
+│   │       
+│   └───views
+│       ├───materials
+│       │       AddBranch.php
+│       │       addMaterial.php
+│       │       addQuantity.php
+│       │       dispenseMaterial.php
+│       │       liveSearch.php
+│       │       viewAll.php
+│       │       
+│       └───users
+│               createUser.php
+│               login.php
+│               
+├───config
+│       config.php
+│       database.php
+│       
+├───logs
+│       error.log
+│       
+├───public
+│   │   index.php
+│   │   
+│   └───assets
+│       ├───Css
+│       │       input.css
+│       │       Master.css
+│       │       output.css
+│       │       styles.css
+│       │       tailwindStyle.css
+│       │       
+│       ├───fonts
+│       │   │   fontawesome-webfont.eot
+│       │   │   fontawesome-webfont.svg
+│       │   │   fontawesome-webfont.ttf
+│       │   │   fontawesome-webfont.woff
+│       │   │   fontawesome-webfont.woff2
+│       │   │   FontAwesome.otf
+│       │   │   
+│       │   └───AppFonts
+│       │           Almarai-Bold.ttf
+│       │           Almarai-ExtraBold.ttf
+│       │           Almarai-Light.ttf
+│       │           Almarai-Regular.ttf
+│       │           
+│       ├───js
+│       │       addBranch.js
+│       │       addMaterial.js
+│       │       addQuantity.js
+│       │       dispenseMaterial.js
+│       │       liveSearch.js
+│       │       
+│       └───lib
+│               jquery.min.js
+│               
+└───vendor
