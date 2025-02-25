@@ -1,45 +1,61 @@
 ﻿Folder PATH listing for volume Windwos 10
 Volume serial number is CAEE-D683
 C:.
+│   .gitignore
 │   .htaccess
 │   AppStructre.txt
 │   ChangendCode
+│   Code until Project Finsh
 │   composer.json
+│   composer.lock
+│   EnhancedCode
 │   package-lock.json
 │   package.json
 │   project_structure.txt
 │   README.md
 │   tailwind.config.js
+│   test.php
+│   WorkingFineCode.php
 │   
 ├───.idea
 │       .gitignore
 │       .name
+│       codeception.xml
 │       MaterialMagement.iml
 │       modules.xml
 │       php.xml
+│       phpspec.xml
+│       phpunit.xml
+│       vcs.xml
 │       workspace.xml
 │       
 ├───app
 │   ├───Controllers
 │   │       AddQuantityController.php
+│   │       AuthController.php
+│   │       BaseController.php
 │   │       BranchController.php
 │   │       DispenseMaterialController.php
 │   │       LiveSearchController.php
 │   │       MaterialController.php
+│   │       SupplierController.php
 │   │       UserController.php
 │   │       
 │   ├───core
 │   │       autoloader.php
 │   │       Controller.php
-│   │       Database.php
 │   │       Model.php
 │   │       View.php
+│   │       
+│   ├───middleware
+│   │       AuthMiddleware.php
 │   │       
 │   ├───models
 │   │       Branch.php
 │   │       Dispense.php
 │   │       LiveSearch.php
 │   │       Material.php
+│   │       Supplier.php
 │   │       User.php
 │   │       
 │   └───views
@@ -51,22 +67,30 @@ C:.
 │       │       liveSearch.php
 │       │       viewAll.php
 │       │       
+│       ├───Suppliers
+│       │       addSuppliers.php
+│       │       supplierList.php
+│       │       
 │       └───users
 │               createUser.php
+│               index.php
 │               login.php
 │               
 ├───config
 │       config.php
 │       database.php
 │       
+├───Last working code
 ├───logs
 │       error.log
 │       
 ├───public
+│   │   debug.log
 │   │   index.php
 │   │   
 │   └───assets
 │       ├───Css
+│       │       fonts.css
 │       │       input.css
 │       │       Master.css
 │       │       output.css
@@ -86,15 +110,35 @@ C:.
 │       │           Almarai-ExtraBold.ttf
 │       │           Almarai-Light.ttf
 │       │           Almarai-Regular.ttf
+│       │           ReadexPro-Bold.ttf
+│       │           ReadexPro-Medium.ttf
+│       │           ReadexPro-Regular.ttf
 │       │           
 │       ├───js
 │       │       addBranch.js
 │       │       addMaterial.js
 │       │       addQuantity.js
+│       │       addSuppliers.js
 │       │       dispenseMaterial.js
 │       │       liveSearch.js
+│       │       users.js
 │       │       
 │       └───lib
 │               jquery.min.js
 │               
 └───vendor
+    │   autoload.php
+    │   
+    └───composer
+            autoload_classmap.php
+            autoload_namespaces.php
+            autoload_psr4.php
+            autoload_real.php
+            autoload_static.php
+            ClassLoader.php
+            installed.json
+            installed.php
+            InstalledVersions.php
+            LICENSE
+            platform_check.php
+            

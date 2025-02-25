@@ -1,24 +1,93 @@
 <?php
-namespace app\models; // All lowercase
 
-use app\config\database; // Updated to lowercase
+namespace app\models;
+use PDO;
+use config\database;
 
 class Material {
-    private $db;
+    private $pdo;
 
     public function __construct() {
-        $this->db = Database::connect(); // Use the updated namespace
+        $this->pdo = (new database())->getConnection();
     }
 
-    public function addMaterial($data) {
-        $query = "INSERT INTO materials (name, size, unit, quantity, branch_id, code) 
-                  VALUES (:name, :size, :unit, :quantity, :branch_id, :code)";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute($data);
+    public function getAllMaterials() {
+        $stmt = $this->pdo->query("SELECT * FROM materials");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getBranches() {
-        $query = "SELECT id, name FROM branches";
-        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    public function getLast20Materials() {
+        $stmt = $this->pdo->query("SELECT * FROM materials ORDER BY id DESC LIMIT 20");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function generateCode($name, $size) {
+        // توليد كود فريد من 3 أحرف/أرقام
+        $prefix = strtoupper(substr($name, 0, 2)); // أول حرفين من الاسم
+        $random = substr(str_shuffle("0123456789"), 0, 1); // رقم عشوائي
+        return $prefix . $random;
+    }
+
+
+
+
+    public function createMaterial($data) {
+        $code = $this->generateCode($data['name'], $data['size']);
+        $supplier_id = !empty($data['supplier_id']) ? $data['supplier_id'] : null;
+        
+        // نستخدم استعلام أبسط مؤقتاً بدون last_updated_by
+        $stmt = $this->pdo->prepare("INSERT INTO materials 
+            (name, size, unit, quantity, branch_id, code, supplier_id, created_at, updated_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        
+        return $stmt->execute([
+            $data['name'],
+            $data['size'] ?? null,
+            $data['unit'] ?? null,
+            $data['quantity'],
+            $data['branch_id'],
+            $code,
+            $supplier_id
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+    public function getSuppliers() {
+        $stmt = $this->pdo->query("SELECT id, name FROM suppliers");
+        $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($suppliers);
+        exit;
+    }
+
+    public function updateMaterial($id, $data) {
+        $last_updated_by = 1; // قيمة افتراضية
+        
+        $stmt = $this->pdo->prepare("UPDATE materials 
+                                   SET name = ?, size = ?, unit = ?, quantity = ?, 
+                                       branch_id = ?, supplier_id = ?, last_updated_by = ? 
+                                   WHERE id = ?");
+
+        return $stmt->execute([
+            $data['name'],
+            $data['size'],
+            $data['unit'],
+            $data['quantity'],
+            $data['branch_id'],
+            $data['supplier_id'] ?? null,
+            $last_updated_by,
+            $id
+        ]);
+    }
+
+    public function deleteMaterial($id) {
+        $stmt = $this->pdo->prepare("DELETE FROM materials WHERE id = ?");
+        return $stmt->execute([$id]);
     }
 }

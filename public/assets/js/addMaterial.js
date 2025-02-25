@@ -1,11 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-    loadBranches();
-    loadSuppliers();
-
     const form = document.getElementById("addMaterialForm");
+    const branchSelect = document.getElementById("branch_id");
+    const supplierSelect = document.getElementById("supplier_id");
+    
+    // تحميل البيانات الأولية
+    loadInitialData();
+
+    function loadInitialData() {
+        loadBranches();
+        loadSuppliers();
+        loadMaterials();
+    }
+
+    // إضافة مادة جديدة
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        
         const formData = new FormData(form);
         
         fetch("/MaterailManegmentT/public/index.php?controller=material&action=store", {
@@ -14,56 +23,90 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
-            const responseMessage = document.getElementById("responseMessage");
+            alert(data.message);
             if (data.status === "success") {
-                responseMessage.textContent = data.message;
-                responseMessage.classList.remove("text-red-500");
-                responseMessage.classList.add("text-green-500");
                 form.reset();
-            } else {
-                responseMessage.textContent = "خطأ: " + data.message;
-                responseMessage.classList.add("text-red-500");
+                loadMaterials();
             }
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => {
+            console.error("Error:", error);
+            alert("حدث خطأ أثناء إضافة المادة");
+        });
     });
-});
 
-function loadBranches() {
-    fetch("/MaterailManegmentT/public/index.php?controller=branch&action=getAll")
+    function loadSuppliers() {
+        fetch("/MaterailManegmentT/public/index.php?controller=material&action=getSupplier")
         .then(response => response.json())
-        .then(data => {
-            const branchSelect = document.getElementById("branch_id");
-            branchSelect.innerHTML = "<option value=''>اختر الفرع</option>";
-            data.forEach(branch => {
-                const option = document.createElement("option");
-                option.value = branch.id;
-                option.textContent = branch.name;
-                branchSelect.appendChild(option);
+        .then(suppliers => {
+            supplierSelect.innerHTML = '<option value="">اختر المورد (اختياري)</option>';
+            suppliers.forEach(supplier => {
+                supplierSelect.innerHTML += `
+                    <option value="${supplier.id}">${supplier.name}</option>
+                `;
+            });
+        })
+        .catch(error => console.error("Error loading suppliers:", error));
+    }
+
+    function loadBranches() {
+        fetch("/MaterailManegmentT/public/index.php?controller=branch&action=getBranches")
+        .then(response => response.json())
+        .then(branches => {
+            branchSelect.innerHTML = '<option value="">اختر الفرع</option>';
+            branches.forEach(branch => {
+                branchSelect.innerHTML += `<option value="${branch.id}">${branch.name}</option>`;
             });
         })
         .catch(error => console.error("Error loading branches:", error));
-}
+    }
 
-function loadSuppliers() {
-    fetch("/MaterailManegmentT/public/index.php?controller=supplier&action=getAll")
+    function loadMaterials() {
+        fetch("/MaterailManegmentT/public/index.php?controller=material&action=getMaterials")
         .then(response => response.json())
-        .then(data => {
-            const supplierSelect = document.createElement("select");
-            supplierSelect.id = "supplier_id";
-            supplierSelect.name = "supplier_id";
-            supplierSelect.classList.add("w-full", "p-2", "border", "rounded", "mt-2");
+        .then(materials => {
+            const tbody = document.querySelector("tbody");
+            tbody.innerHTML = "";
             
-            supplierSelect.innerHTML = "<option value=''>اختر المورد (اختياري)</option>";
-            data.forEach(supplier => {
-                const option = document.createElement("option");
-                option.value = supplier.id;
-                option.textContent = supplier.name;
-                supplierSelect.appendChild(option);
+            materials.forEach(material => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-100">
+                        <td class="p-2 border">${material.code || ''}</td>
+                        <td class="p-2 border">${material.name || ''}</td>
+                        <td class="p-2 border">${material.size || ''}</td>
+                        <td class="p-2 border">${material.unit || ''}</td>
+                        <td class="p-2 border">${material.quantity || ''}</td>
+                        <td class="p-2 border">
+                            <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded" 
+                                    data-id="${material.id}">تعديل</button>
+                            <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded" 
+                                    data-id="${material.id}">حذف</button>
+                        </td>
+                    </tr>
+                `;
             });
-            
-            const form = document.getElementById("addMaterialForm");
-            form.insertBefore(supplierSelect, form.children[form.children.length - 2]);
+
+            addButtonEvents();
         })
-        .catch(error => console.error("Error loading suppliers:", error));
-}
+        .catch(error => console.error("Error loading materials:", error));
+    }
+
+    function addButtonEvents() {
+        document.querySelectorAll(".delete-btn").forEach(btn => {
+            btn.addEventListener("click", function() {
+                if (confirm("هل أنت متأكد من حذف هذه المادة؟")) {
+                    const id = this.dataset.id;
+                    fetch(`/MaterailManegmentT/public/index.php?controller=material&action=delete&id=${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.status === "success") {
+                            loadMaterials();
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+                }
+            });
+        });
+    }
+});

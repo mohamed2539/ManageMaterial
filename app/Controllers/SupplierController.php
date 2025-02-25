@@ -15,7 +15,9 @@ class SupplierController extends BaseController {
 
     public function index() {
         $suppliers = $this->supplierModel->getLast20Suppliers();
-        $this->renderView('../views/Suppliers/addSuppliers', ['suppliers' => $suppliers]);
+        $this->renderView('Suppliers/addSuppliers');
+        //$this->renderView('Suppliers/addSuppliers', ['suppliers' => $suppliers]);
+        //$this->renderView('../views/Suppliers/addSuppliers', ['suppliers' => $suppliers]);
     }
 
     public function store() {

@@ -16,6 +16,7 @@ class Branch {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     public function getLast20Branches() {
         $stmt = $this->pdo->query("SELECT * FROM branches  LIMIT 20");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
