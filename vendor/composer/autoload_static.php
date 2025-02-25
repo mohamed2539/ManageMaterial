@@ -13,6 +13,8 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         ),
         'a' => 
         array (
+            'app\\models\\' => 11,
+            'app\\Controllers\\' => 16,
             'app\\' => 4,
         ),
     );
@@ -22,6 +24,14 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         array (
             0 => __DIR__ . '/../..' . '/config',
         ),
+        'app\\models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/models',
+        ),
+        'app\\Controllers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/Controllers',
+        ),
         'app\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -30,6 +40,19 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'app\\Controllers\\AddQuantityController' => __DIR__ . '/../..' . '/app/Controllers/AddQuantityController.php',
+        'app\\Controllers\\BaseController' => __DIR__ . '/../..' . '/app/Controllers/BaseController.php',
+        'app\\Controllers\\BranchController' => __DIR__ . '/../..' . '/app/Controllers/BranchController.php',
+        'app\\Controllers\\DispenseMaterialController' => __DIR__ . '/../..' . '/app/Controllers/DispenseMaterialController.php',
+        'app\\Controllers\\LiveSearchController' => __DIR__ . '/../..' . '/app/Controllers/LiveSearchController.php',
+        'app\\Controllers\\LoginController' => __DIR__ . '/../..' . '/app/Controllers/LoginController.php',
+        'app\\Controllers\\MaterialController' => __DIR__ . '/../..' . '/app/Controllers/MaterialController.php',
+        'app\\Controllers\\SupplierController' => __DIR__ . '/../..' . '/app/Controllers/SupplierController.php',
+        'app\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Controllers/UserController.php',
+        'app\\models\\Branch' => __DIR__ . '/../..' . '/app/models/Branch.php',
+        'app\\models\\Material' => __DIR__ . '/../..' . '/app/models/Material.php',
+        'app\\models\\Supplier' => __DIR__ . '/../..' . '/app/models/Supplier.php',
+        'config\\database' => __DIR__ . '/../..' . '/config/database.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

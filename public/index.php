@@ -1,14 +1,15 @@
 <?php
 
 use app\Controllers\BranchController;
+use app\Controllers\SupplierController; // ✅ إضافة SupplierController
 
-require_once '../vendor/autoload.php'; // ✅ استخدم Autoload لتحميل الكلاسات تلقائيًا
+require_once '../vendor/autoload.php'; // ✅ تحميل الـ Autoload
 require_once '../config/config.php';   // ✅ تحميل الإعدادات
 
-$controllerName = isset($_GET['controller']) ? ucfirst($_GET['controller']) . 'Controller' : 'BranchController';
+$controllerName = isset($_GET['controller']) ? ucfirst($_GET['controller']) . 'Controller' : 'SupplierController'; // ✅ الافتراضي الآن هو SupplierController
 $action = $_GET['action'] ?? 'index';
 
-$controllerClass = "app\\Controllers\\$controllerName"; // ✅ استخدام الـ Namespace الصحيح
+$controllerClass = "app\\Controllers\\$controllerName"; // ✅ Namespace صحيح
 
 if (class_exists($controllerClass)) {
     $controller = new $controllerClass();

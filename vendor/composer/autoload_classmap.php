@@ -7,4 +7,17 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'app\\Controllers\\AddQuantityController' => $baseDir . '/app/Controllers/AddQuantityController.php',
+    'app\\Controllers\\BaseController' => $baseDir . '/app/Controllers/BaseController.php',
+    'app\\Controllers\\BranchController' => $baseDir . '/app/Controllers/BranchController.php',
+    'app\\Controllers\\DispenseMaterialController' => $baseDir . '/app/Controllers/DispenseMaterialController.php',
+    'app\\Controllers\\LiveSearchController' => $baseDir . '/app/Controllers/LiveSearchController.php',
+    'app\\Controllers\\LoginController' => $baseDir . '/app/Controllers/LoginController.php',
+    'app\\Controllers\\MaterialController' => $baseDir . '/app/Controllers/MaterialController.php',
+    'app\\Controllers\\SupplierController' => $baseDir . '/app/Controllers/SupplierController.php',
+    'app\\Controllers\\UserController' => $baseDir . '/app/Controllers/UserController.php',
+    'app\\models\\Branch' => $baseDir . '/app/models/Branch.php',
+    'app\\models\\Material' => $baseDir . '/app/models/Material.php',
+    'app\\models\\Supplier' => $baseDir . '/app/models/Supplier.php',
+    'config\\database' => $baseDir . '/config/database.php',
 );

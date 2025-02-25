@@ -1,0 +1,19 @@
+# تجاهل ملفات معينة
+AppStructre.txt
+ChangendCode
+Code until Project Finsh
+EnhancedCode
+WorkingFineCode.php
+
+# تجاهل مجلد بالكامل
+Last working code/
+
+# تجاهل جميع الملفات بامتداد معين (مثال: جميع ملفات الـ log)
+*.log
+
+# تجاهل جميع الملفات داخل مجلد معين
+temp/
+backup/
+
+# استثناء ملف داخل مجلد متجاهل (مثلاً السماح بـ keep.txt داخل مجلد temp)
+!temp/keep.txt
