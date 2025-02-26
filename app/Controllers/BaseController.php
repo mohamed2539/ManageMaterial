@@ -51,12 +51,31 @@ abstract class BaseController {
         require_once $viewFile;
     }
 
+    /*
     protected function jsonResponse($data, $status = 200) {
         http_response_code($status);
         header('Content-Type: application/json');
         echo json_encode($data);
         exit;
     }
+    */
+
+    protected function jsonResponse($data, $statusCode = 200) {
+        try {
+            header('Content-Type: application/json');
+            http_response_code($statusCode);
+            echo json_encode($data);
+            exit;
+        } catch (\Exception $e) {
+            error_log("JSON RESPONSE ERROR: " . $e->getMessage());
+            header('Content-Type: application/json');
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'خطأ في تنسيق البيانات']);
+            exit;
+        }
+    }
+
+
 
     protected function getRequestData() {
         return json_decode(file_get_contents('php://input'), true) ?? [];

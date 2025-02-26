@@ -14,6 +14,54 @@ class UserController extends BaseController {
         $this->branchModel = new Branch();
     }
 
+    public function login() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $user = $this->userModel->getUserByUsername($username);
+
+            if ($user && password_verify($password, $user['password'])) {
+                $_SESSION['user'] = $user;
+                header("Location: /dashboard.php");
+                exit;
+            } else {
+                $error = "Invalid credentials";
+                require 'views/auth/login.php';
+            }
+        } else {
+            require 'views/auth/login.php';
+        }
+    }
+
+    public function register() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $fullName = $_POST['full_name'];
+            $branchId = $_POST['branch_id'];
+            $role = $_POST['role'];
+
+            if ($this->userModel->registerUser($username, $password, $fullName, $branchId, $role)) {
+                header("Location: /login.php");
+                exit;
+            } else {
+                $error = "Registration failed";
+                require 'views/auth/register.php';
+            }
+        } else {
+            require 'views/auth/register.php';
+        }
+    }
+    /*========================================Temp Code====================================================*/
+    /*========================================Temp Code====================================================*/
+    /*========================================Temp Code====================================================*/
+
+
+
+
+
+
+
     public function index() {
         $users = $this->userModel->getAllUsers();
         $this->renderView('users/index', ['users' => $users]);

@@ -5,12 +5,25 @@ use PDO;
 use config\database;
 
 class User {
-    private $pdo;
+    private $db;
 
     public function __construct() {
         $this->pdo = (new database())->getConnection();
     }
 
+    public function getUserByUsername($username) {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ? LIMIT 1");
+        $stmt->execute([$username]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function registerUser($username, $password, $fullName, $branchId, $role) {
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $stmt = $this->db->prepare("INSERT INTO users (username, password, full_name, branch_id, role, status, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        return $stmt->execute([$username, $hashedPassword, $fullName, $branchId, $role, 'active']);
+    }
+
+/*========================================Temp Code====================================================*/
     public function findByUsername($username) {
         $stmt = $this->pdo->prepare("
             SELECT users.*, branches.name as branch_name 

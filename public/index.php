@@ -1,7 +1,12 @@
 <?php
-
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 use app\Controllers\BranchController;
-use app\Controllers\SupplierController; // ✅ إضافة SupplierController
+use app\Controllers\SupplierController; 
+use app\Controllers\AuthController;
+use app\Controllers\UserController;
+use app\Controllers\TransactionController;// ✅ إضافة SupplierController
 
 require_once '../vendor/autoload.php'; // ✅ تحميل الـ Autoload
 require_once '../config/config.php';   // ✅ تحميل الإعدادات
