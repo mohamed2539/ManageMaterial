@@ -90,4 +90,23 @@ class Material {
         $stmt = $this->pdo->prepare("DELETE FROM materials WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+
+
+
+// في ملف Material.php
+public function searchMaterials($name, $supplier_id) {
+    $stmt = $this->pdo->prepare("SELECT * FROM materials WHERE name LIKE ? AND (supplier_id = ? OR ? = '')");
+    $stmt->execute(["%$name%", $supplier_id, $supplier_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
+
+
+
+
+
+
 }

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     loadStockAlerts();
     initializeCharts();
+    loadChartData();
     setInterval(loadStockAlerts, 300000); // تحديث كل 5 دقائق
 });
 
@@ -107,4 +108,37 @@ function initializeCharts() {
                 }
             });
         });
+
+
+
+        async function loadChartData() {
+            try {
+                const response = await fetch('/MaterailManegmentT/public/index.php?controller=dashboard&action=getChartData');
+                const data = await response.json();
+                
+                if (data.materialUsage) {
+                    createMaterialUsageChart(data.materialUsage);
+                }
+                
+                if (data.branchDistribution) {
+                    createBranchDistributionChart(data.branchDistribution);
+                }
+            } catch (error) {
+                console.error('Error loading chart data:', error);
+            }
+        }
+        
+        // دوال إنشاء الرسوم البيانية
+        function createMaterialUsageChart(data) {
+            // ... كود الرسم البياني
+        }
+        
+        function createBranchDistributionChart(data) {
+            // ... كود الرسم البياني
+        }
+
+
+
+
+
 }

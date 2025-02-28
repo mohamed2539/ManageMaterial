@@ -1,7 +1,9 @@
 <?php
+
 namespace app\Controllers;
 
 abstract class BaseController {
+
     protected function loadModel($model) {
         $modelPath = "../app/models/$model.php";
         $modelClass = "app\\models\\$model";
@@ -15,59 +17,48 @@ abstract class BaseController {
         }
         throw new \Exception("Model $model not found");
     }
-
     protected function renderView($view, $data = []) {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         
-        // إضافة بيانات المستخدم والقائمة النشطة
         $data['currentUser'] = [
             'id' => $_SESSION['user_id'] ?? null,
             'username' => $_SESSION['username'] ?? null,
             'role' => $_SESSION['role'] ?? null,
-            'full_name' => $_SESSION['full_name'] ?? null,
-            'branch_id' => $_SESSION['branch_id'] ?? null,
-            'branch_name' => $_SESSION['branch_name'] ?? null
+            'full_name' => $_SESSION['full_name'] ?? null
         ];
-
+    
         extract($data);
-
-        // تخزين محتوى الصفحة
-        ob_start();
+    
+        // تنظيف المسار من أي بادئات غير ضرورية
+        $view = str_replace('../views/', '', $view);
         
-        // تحديد مسار الملف
-        $viewFile = $this->resolveViewPath($view);
-        
+        // تحديد المسار الصحيح بناءً على نوع الصفحة
+        if (strpos($view, 'users/') === 0) {
+            $viewFile = '../app/views/' . $view . '.php';
+        } else if (strpos($view, 'Suppliers/') === 0) {
+            $viewFile = '../app/views/' . $view . '.php';
+        } else {
+            // للصفحات الأخرى (المواد)
+            $viewFile = '../app/views/materials/' . ucfirst($view) . '.php';
+        }
+    
         if (!file_exists($viewFile)) {
             throw new \Exception("View $view not found at: $viewFile");
         }
-
+    
         require_once $viewFile;
-        $content = ob_get_clean();
-
-        // التحقق من وجود layout مخصص
-        $layoutFile = "../app/views/layouts/layout.php";
-        
-        if (file_exists($layoutFile)) {
-            require_once $layoutFile;
-        } else {
-            echo $content;
-        }
     }
 
-    private function resolveViewPath($view) {
-        $view = str_replace('../views/', '', $view);
-        
-        // تحديد المسار حسب نوع الصفحة
-        if (strpos($view, 'users/') === 0 || 
-            strpos($view, 'Suppliers/') === 0 || 
-            strpos($view, 'dashboard/') === 0) {
-            return '../app/views/' . $view . '.php';
-        } else {
-            return '../app/views/materials/' . ucfirst($view) . '.php';
-        }
+    /*
+    protected function jsonResponse($data, $status = 200) {
+        http_response_code($status);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
     }
+    */
 
     protected function jsonResponse($data, $statusCode = 200) {
         try {
@@ -83,6 +74,8 @@ abstract class BaseController {
             exit;
         }
     }
+
+
 
     protected function getRequestData() {
         return json_decode(file_get_contents('php://input'), true) ?? [];

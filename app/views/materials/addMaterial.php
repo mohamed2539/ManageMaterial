@@ -68,6 +68,12 @@
                         <td class="p-3"><?= htmlspecialchars($material['branch_id']) ?></td>
                         <td class="p-3"><?= htmlspecialchars($material['supplier_id'] ?? '-') ?></td>
                         <td class="p-3"><?= htmlspecialchars($material['updated_at']) ?></td>
+
+
+                        <td class="p-3"><?= htmlspecialchars($material['branch_id']) ?></td>
+                        <td class="p-3"><?= htmlspecialchars($material['supplier_id'] ?? '-') ?></td>
+                        <td class="p-3"><?= htmlspecialchars($material['updated_at']) ?></td>
+
                         <td class="p-3">
                             <button class="bg-yellow-500 text-white px-3 py-1 rounded edit-btn"
                                     data-id="<?= $material['id'] ?>"
