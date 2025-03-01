@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
     <!-- نموذج إضافة مادة جديدة -->
     <form id="addMaterialForm" class="space-y-4 p-4 border rounded-lg shadow-md bg-white">
         <div class="grid grid-cols-3 gap-4">
-        <input type="text" id="MaterailCode" placeholder="كود المادة" class="w-full p-2 border rounded">
+            <input type="text" name="code" placeholder="كود المادة" class="w-full p-2 border rounded" required>
             <input type="text" name="name" placeholder="اسم المادة" class="w-full p-2 border rounded" required>
             <input type="text" name="size" placeholder="المقاس" class="w-full p-2 border rounded">
             <input type="text" name="unit" placeholder="الوحدة" class="w-full p-2 border rounded">
@@ -24,7 +24,6 @@
             <div class="relative">
                 <select name="branch_id" id="branch_id" class="w-full p-2 border rounded" required>
                     <option value="">اختر الفرع</option>
-                    <!-- سيتم تحميل الفروع ديناميكياً -->
                 </select>
             </div>
 
@@ -32,13 +31,9 @@
             <div class="relative">
                 <select name="supplier_id" id="supplier_id" class="w-full p-2 border rounded">
                     <option value="">اختر المورد (اختياري)</option>
-                    <!-- سيتم تحميل الموردين ديناميكياً -->
                 </select>
             </div>
         </div>
-       <!-- <button type="submit" id="issueButton"  class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-            صرف المادة
-        </button>-->
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
             إضافة مادة
         </button>
@@ -69,18 +64,13 @@
                         <td class="p-3"><?= htmlspecialchars($material['size']) ?></td>
                         <td class="p-3"><?= htmlspecialchars($material['unit']) ?></td>
                         <td class="p-3"><?= htmlspecialchars($material['quantity']) ?></td>
-                        <td class="p-3"><?= htmlspecialchars($material['branch_id']) ?></td>
-                        <td class="p-3"><?= htmlspecialchars($material['supplier_id'] ?? '-') ?></td>
+                        <td class="p-3"><?= htmlspecialchars($material['branch_name']) ?></td>
+                        <td class="p-3"><?= htmlspecialchars($material['supplier_name'] ?? '-') ?></td>
                         <td class="p-3"><?= htmlspecialchars($material['updated_at']) ?></td>
-
-
-                        <td class="p-3"><?= htmlspecialchars($material['branch_id']) ?></td>
-                        <td class="p-3"><?= htmlspecialchars($material['supplier_id'] ?? '-') ?></td>
-                        <td class="p-3"><?= htmlspecialchars($material['updated_at']) ?></td>
-
                         <td class="p-3">
                             <button class="bg-yellow-500 text-white px-3 py-1 rounded edit-btn"
                                     data-id="<?= $material['id'] ?>"
+                                    data-code="<?= htmlspecialchars($material['code']) ?>"
                                     data-name="<?= htmlspecialchars($material['name']) ?>"
                                     data-size="<?= htmlspecialchars($material['size']) ?>"
                                     data-unit="<?= htmlspecialchars($material['unit']) ?>"
@@ -105,34 +95,34 @@
 </div>
 
 <!-- مودال تعديل المادة -->
-<div id="editModal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h3 class="text-xl font-bold mb-4">تعديل المادة</h3>
-        <form id="editMaterialForm">
-            <input type="hidden" id="editMaterialId">
-            <div class="space-y-3">
-                <input type="text" id="MaterailCode" placeholder="كود المادة" class="w-full p-2 border rounded">
-                <input type="text" id="editName" placeholder="اسم المادة" class="w-full p-2 border rounded">
-                <input type="text" id="editSize" placeholder="المقاس" class="w-full p-2 border rounded">
-                <input type="text" id="editUnit" placeholder="الوحدة" class="w-full p-2 border rounded">
-                <input type="number" id="editQuantity" placeholder="الكمية" class="w-full p-2 border rounded">
-                
-                <select id="editBranchId" class="w-full p-2 border rounded">
-                    <!-- سيتم تحميل الفروع ديناميكياً -->
-                </select>
-                
-                <select id="editSupplierId" class="w-full p-2 border rounded">
-                    <!-- سيتم تحميل الموردين ديناميكياً -->
-                </select>
-            </div>
-            <div class="flex justify-between mt-4">
-                <button type="button" id="closeModal" class="bg-gray-400 text-white px-4 py-2 rounded">إغلاق</button>
-                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">حفظ التعديلات</button>
-            </div>
-        </form>
+<div id="editModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">تعديل المادة</h3>
+            <form id="editMaterialForm" class="mt-4">
+                <input type="hidden" id="editMaterialId" name="id">
+                <div class="space-y-4">
+                    <input type="text" id="editCode" name="code" placeholder="كود المادة" class="w-full p-2 border rounded" required>
+                    <input type="text" id="editName" name="name" placeholder="اسم المادة" class="w-full p-2 border rounded" required>
+                    <input type="text" id="editSize" name="size" placeholder="المقاس" class="w-full p-2 border rounded">
+                    <input type="text" id="editUnit" name="unit" placeholder="الوحدة" class="w-full p-2 border rounded">
+                    <input type="number" id="editQuantity" name="quantity" placeholder="الكمية" class="w-full p-2 border rounded" required>
+                    <select id="editBranchId" name="branch_id" class="w-full p-2 border rounded" required>
+                        <option value="">اختر الفرع</option>
+                    </select>
+                    <select id="editSupplierId" name="supplier_id" class="w-full p-2 border rounded">
+                        <option value="">اختر المورد (اختياري)</option>
+                    </select>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button type="button" id="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded">إغلاق</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">حفظ التغييرات</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <script src="/MaterailManegmentT/public/assets/js/addMaterial.js"></script>
 </body>
-</html>
+</html> 

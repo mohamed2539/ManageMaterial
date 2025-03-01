@@ -1,14 +1,32 @@
 {
+  "name": "mohamed2539/material-management",
+  "description": "نظام إدارة المواد والمخزون",
+  "type": "project",
+  "require": {
+    "php": "^7.4|^8.0",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "symfony/var-dumper": "^5.4",
+    "vlucas/phpdotenv": "^5.6"
+  },
   "autoload": {
     "psr-4": {
-      "app\\": "app/",
-      "config\\": "config/",
-      "app\\models\\": "app/models/",
-      "app\\Controllers\\": "app/Controllers/"
-    }
+      "app\\": "app/"
+    },
+    "files": [
+      "app/helpers/functions.php"
+    ]
   },
-  "require": {
-    "php": ">=8.2",
-    "ext-pdo": "*"
+  "authors": [
+    {
+      "name": "Mohamed",
+      "email": "mohamed@example.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
   }
 }

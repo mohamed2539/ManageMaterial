@@ -31,7 +31,7 @@ if (!isset($branchDistribution['data'])) {
     <meta charset="UTF-8">
     <title>الإحصائيات - لوحة التحكم</title>
     <link rel="stylesheet" href="/MaterailManegmentT/public/assets/css/tailwindStyle.css">
-    <link rel="stylesheet" href="../../../public/assets/Css/fonts.css">
+    <link rel="stylesheet" href="/MaterailManegmentT/public/assets/css/fonts.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -42,19 +42,19 @@ if (!isset($branchDistribution['data'])) {
             <div class="bg-white p-6 rounded-lg shadow">
                 <h3 class="text-xl mb-2">معدل الاستهلاك اليومي</h3>
                 <p class="text-3xl font-bold text-blue-600">
-                    <?= number_format($materialUsage['daily_average'], 2) ?>
+                    <?= htmlspecialchars(number_format($materialUsage['daily_average'], 2)) ?>
                 </p>
             </div>
             <div class="bg-white p-6 rounded-lg shadow">
                 <h3 class="text-xl mb-2">أكثر المواد طلباً</h3>
                 <p class="text-3xl font-bold text-green-600">
-                    <?= $materialUsage['most_requested'] ?>
+                    <?= htmlspecialchars($materialUsage['most_requested']) ?>
                 </p>
             </div>
             <div class="bg-white p-6 rounded-lg shadow">
                 <h3 class="text-xl mb-2">أكثر الفروع نشاطاً</h3>
                 <p class="text-3xl font-bold text-purple-600">
-                    <?= $branchDistribution['most_active'] ?>
+                    <?= htmlspecialchars($branchDistribution['most_active']) ?>
                 </p>
             </div>
         </div>
@@ -89,10 +89,10 @@ if (!isset($branchDistribution['data'])) {
                             <?php foreach ($supplierActivity as $supplier): ?>
                                 <tr>
                                     <td class="border px-4 py-2"><?= htmlspecialchars($supplier['supplier_name']) ?></td>
-                                    <td class="border px-4 py-2"><?= $supplier['order_count'] ?></td>
-                                    <td class="border px-4 py-2"><?= $supplier['total_spent'] ?></td>
+                                    <td class="border px-4 py-2"><?= htmlspecialchars($supplier['order_count']) ?></td>
+                                    <td class="border px-4 py-2"><?= htmlspecialchars($supplier['total_spent']) ?></td>
                                     <td class="border px-4 py-2">
-                                        <?= $supplier['last_order_date'] ? date('Y-m-d', strtotime($supplier['last_order_date'])) : 'لا يوجد' ?>
+                                        <?= $supplier['last_order_date'] ? htmlspecialchars(date('Y-m-d', strtotime($supplier['last_order_date']))) : 'لا يوجد' ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

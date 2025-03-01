@@ -1,0 +1,21 @@
+RewriteEngine On
+
+# إذا كان الملف أو المجلد موجود، استخدمه مباشرة
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# إعادة توجيه كل الطلبات الأخرى إلى index.php
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# السماح بالوصول إلى المجلدات الثابتة
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# تكوين MIME Types
+AddType text/css .css
+AddType text/javascript .js
+AddType application/x-font-woff .woff
+AddType application/x-font-woff2 .woff2
+AddType application/x-font-ttf .ttf
+AddType application/x-font-eot .eot 

@@ -1,14 +1,20 @@
 <?php
 
-
 namespace app\Controllers;
 use app\models\User;
+use app\utils\Database;
+use app\utils\Session;
+use app\utils\Logger;
 
 class AuthController extends BaseController {
     private $userModel;
+    private $db;
+    private $session;
 
     public function __construct() {
         $this->userModel = new User();
+        $this->db = Database::getInstance();
+        $this->session = new Session();
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -22,45 +28,29 @@ class AuthController extends BaseController {
         $this->renderView('users/login');
     }
 
-    public function login() {
-        // تأكد من بدء الجلسة
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+    public function login($email, $password) {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ? AND is_active = 1");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+
+            if ($user && password_verify($password, $user['password'])) {
+                // تحديث آخر تسجيل دخول
+                $this->db->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?")->execute([$user['id']]);
+                
+                // تخزين بيانات المستخدم في الجلسة
+                $this->session->set('user_id', $user['id']);
+                $this->session->set('user_role', $user['role']);
+                $this->session->set('branch_id', $user['branch_id']);
+
+                return ['success' => true, 'message' => 'تم تسجيل الدخول بنجاح'];
+            }
+
+            return ['success' => false, 'message' => 'البريد الإلكتروني أو كلمة المرور غير صحيحة'];
+        } catch (Exception $e) {
+            Logger::error('Login error: ' . $e->getMessage());
+            return ['success' => false, 'message' => 'حدث خطأ أثناء تسجيل الدخول'];
         }
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('auth', 'index');
-            return;
-        }
-
-        $username = $_POST['username'] ?? '';
-        $password = $_POST['password'] ?? '';
-
-        $user = $this->userModel->findByUsername($username);
-
-        if (!$user || !$this->userModel->verifyPassword($password, $user['password'])) {
-            $this->renderView('users/login', ['error' => 'اسم المستخدم أو كلمة المرور غير صحيحة']);
-            return;
-        }
-
-        if ($user['status'] !== 'active') {
-            $this->renderView('users/login', ['error' => 'هذا الحساب غير نشط']);
-            return;
-        }
-
-        // تخزين بيانات المستخدم في الجلسة
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['full_name'] = $user['full_name'];
-        $_SESSION['role'] = $user['role'];
-        $_SESSION['branch_id'] = $user['branch_id'];
-        $_SESSION['branch_name'] = $user['branch_name'];
-        $_SESSION['logged_in'] = true; // إضافة علامة للتسجيل الدخول
-
-        // تسجيل في ملف السجل لمتابعة المشكلة
-        error_log("User logged in successfully: ID={$user['id']}, Username={$user['username']}");
-
-        $this->redirectBasedOnRole($user['role'], $user['branch_id']);
     }
 
     protected function redirectBasedOnRole($role, $branchId) {
@@ -75,22 +65,61 @@ class AuthController extends BaseController {
         }
     }
 
-
-
-    /*    protected function redirectBasedOnRole($role, $branchId) {
-            switch ($role) {
-                case 'admin':
-                case 'main_branch':
-                    $this->redirect('user', 'index');
-                    break;
-                default:
-                    $this->redirect('material', 'viewAll', ['branch_id' => $branchId]);
-                    break;
-            }
-        }*/
-
     public function logout() {
-        session_destroy();
-        $this->redirect('auth', 'index');
+        $this->session->destroy();
+        return ['success' => true, 'message' => 'تم تسجيل الخروج بنجاح'];
+    }
+
+    public function register($userData) {
+        try {
+            // التحقق من عدم وجود المستخدم
+            $stmt = $this->db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$userData['email']]);
+            if ($stmt->fetch()) {
+                return ['success' => false, 'message' => 'البريد الإلكتروني مسجل مسبقاً'];
+            }
+
+            // تشفير كلمة المرور
+            $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
+
+            $sql = "INSERT INTO users (username, email, password, full_name, role, branch_id) 
+                    VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $userData['username'],
+                $userData['email'],
+                $hashedPassword,
+                $userData['full_name'],
+                $userData['role'] ?? 'user',
+                $userData['branch_id'] ?? null
+            ]);
+
+            return ['success' => true, 'message' => 'تم إنشاء الحساب بنجاح'];
+        } catch (Exception $e) {
+            Logger::error('Registration error: ' . $e->getMessage());
+            return ['success' => false, 'message' => 'حدث خطأ أثناء إنشاء الحساب'];
+        }
+    }
+
+    public function resetPassword($email) {
+        try {
+            $token = bin2hex(random_bytes(32));
+            $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+            $stmt = $this->db->prepare("UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE email = ?");
+            $stmt->execute([$token, $expiry, $email]);
+
+            if ($stmt->rowCount() > 0) {
+                // إرسال بريد إلكتروني برابط إعادة تعيين كلمة المرور
+                $resetLink = "https://your-domain.com/reset-password?token=" . $token;
+                // TODO: implement email sending
+                return ['success' => true, 'message' => 'تم إرسال رابط إعادة تعيين كلمة المرور'];
+            }
+
+            return ['success' => false, 'message' => 'البريد الإلكتروني غير مسجل'];
+        } catch (Exception $e) {
+            Logger::error('Password reset error: ' . $e->getMessage());
+            return ['success' => false, 'message' => 'حدث خطأ أثناء إعادة تعيين كلمة المرور'];
+        }
     }
 }

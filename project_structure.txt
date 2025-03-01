@@ -1,6 +1,8 @@
 ﻿Folder PATH listing for volume Windwos 10
 Volume serial number is CAEE-D683
 C:.
+│   .env
+│   .env.example
 │   .gitignore
 │   .htaccess
 │   AppStructre.txt
@@ -16,56 +18,96 @@ C:.
 │   tailwind.config.js
 │   test.php
 │   WorkingFineCode.php
-│   
-├───.idea
-│       .gitignore
-│       .name
-│       codeception.xml
-│       MaterialMagement.iml
-│       modules.xml
-│       php.xml
-│       phpspec.xml
-│       phpunit.xml
-│       vcs.xml
-│       workspace.xml
-│       
+│      
 ├───app
+│   │   routes.php
+│   │   
 │   ├───Controllers
 │   │       AddQuantityController.php
 │   │       AuthController.php
+│   │       BaseController.old.php
 │   │       BaseController.php
 │   │       BranchController.php
+│   │       DashboardController.old.php
+│   │       DashboardController.php
 │   │       DispenseMaterialController.php
+│   │       InventoryController.php
 │   │       LiveSearchController.php
 │   │       MaterialController.php
+│   │       ReportsController.php
+│   │       SearchController.php
 │   │       SupplierController.php
+│   │       TransactionController.php
 │   │       UserController.php
 │   │       
 │   ├───core
 │   │       autoloader.php
+│   │       BaseController.php
 │   │       Controller.php
+│   │       Database.php
 │   │       Model.php
+│   │       Router.php
+│   │       Session.php
 │   │       View.php
 │   │       
-│   ├───middleware
-│   │       AuthMiddleware.php
+│   ├───database
+│   │           
+│   ├───helpers
+│   │       Cache.php
+│   │       functions.php
+│   │       Logger.php
 │   │       
+│   ├───middleware
 │   ├───models
+│   │       addQuantity.php
 │   │       Branch.php
+│   │       Dashboard.php
 │   │       Dispense.php
+│   │       Inventory.php
 │   │       LiveSearch.php
 │   │       Material.php
+│   │       Report.php
+│   │       search.php
 │   │       Supplier.php
+│   │       Transaction.php
 │   │       User.php
 │   │       
 │   └───views
+│       │   index.php
+│       │   
+│       ├───dashboard
+│       │       index.old.php
+│       │       index.php
+│       │       reports.php
+│       │       statistics.php
+│       │       
+│       ├───inventory
+│       │       inventory-log.php
+│       │       stockAlert.php
+│       │       
+│       ├───layouts
+│       │       layout.php
+│       │       
 │       ├───materials
 │       │       AddBranch.php
 │       │       addMaterial.php
 │       │       addQuantity.php
 │       │       dispenseMaterial.php
+│       │       index.php
+│       │       issueItem.php
 │       │       liveSearch.php
+│       │       search.php
 │       │       viewAll.php
+│       │       
+│       ├───reports
+│       │       daily.php
+│       │       monthly.php
+│       │       weekly.php
+│       │       
+│       ├───settings
+│       │       backup.php
+│       │       notifications.php
+│       │       system.php
 │       │       
 │       ├───Suppliers
 │       │       addSuppliers.php
@@ -81,10 +123,14 @@ C:.
 │       database.php
 │       
 ├───Last working code
+│       BaseController.old.php
+│       index.php
+│       
 ├───logs
 │       error.log
 │       
 ├───public
+│   │   .htaccess
 │   │   debug.log
 │   │   index.php
 │   │   
@@ -92,6 +138,7 @@ C:.
 │       ├───Css
 │       │       fonts.css
 │       │       input.css
+│       │       layout.css
 │       │       Master.css
 │       │       output.css
 │       │       styles.css
@@ -106,39 +153,374 @@ C:.
 │       │   │   FontAwesome.otf
 │       │   │   
 │       │   └───AppFonts
-│       │           Almarai-Bold.ttf
-│       │           Almarai-ExtraBold.ttf
-│       │           Almarai-Light.ttf
-│       │           Almarai-Regular.ttf
-│       │           ReadexPro-Bold.ttf
-│       │           ReadexPro-Medium.ttf
-│       │           ReadexPro-Regular.ttf
-│       │           
+│       │       │   Almarai-Bold.ttf
+│       │       │   Almarai-ExtraBold.ttf
+│       │       │   Almarai-Light.ttf
+│       │       │   Almarai-Regular.ttf
+│       │       │   CairoPlay-VariableFont_slnt,wght.ttf
+│       │       │   OFL.txt
+│       │       │   ReadexPro-Bold.ttf
+│       │       │   ReadexPro-Medium.ttf
+│       │       │   ReadexPro-Regular.ttf
+│       │       │   README.txt
+│       │       │   
+│       │       └───static
+│       │               CairoPlay-Black.ttf
+│       │               CairoPlay-Bold.ttf
+│       │               CairoPlay-ExtraBold.ttf
+│       │               CairoPlay-ExtraLight.ttf
+│       │               CairoPlay-Light.ttf
+│       │               CairoPlay-Medium.ttf
+│       │               CairoPlay-Regular.ttf
+│       │               CairoPlay-SemiBold.ttf
+│       │               
 │       ├───js
 │       │       addBranch.js
 │       │       addMaterial.js
 │       │       addQuantity.js
 │       │       addSuppliers.js
+│       │       dashboard.js
 │       │       dispenseMaterial.js
+│       │       issueItem.js
 │       │       liveSearch.js
+│       │       materials.js
+│       │       reports.js
+│       │       search.js
+│       │       statistics.js
+│       │       stockAlert.js
 │       │       users.js
 │       │       
 │       └───lib
 │               jquery.min.js
 │               
+    
+├───tests
+│       AuthTest.php
+│       
 └───vendor
     │   autoload.php
     │   
-    └───composer
-            autoload_classmap.php
-            autoload_namespaces.php
-            autoload_psr4.php
-            autoload_real.php
-            autoload_static.php
-            ClassLoader.php
-            installed.json
-            installed.php
-            InstalledVersions.php
-            LICENSE
-            platform_check.php
-            
+    ├───bin
+    │       var-dump-server
+    │       var-dump-server.bat
+    │       
+    ├───composer
+    │       autoload_classmap.php
+    │       autoload_files.php
+    │       autoload_namespaces.php
+    │       autoload_psr4.php
+    │       autoload_real.php
+    │       autoload_static.php
+    │       ClassLoader.php
+    │       installed.json
+    │       installed.php
+    │       InstalledVersions.php
+    │       LICENSE
+    │       platform_check.php
+    │       
+    ├───graham-campbell
+    │   └───result-type
+    │       │   composer.json
+    │       │   LICENSE
+    │       │   
+    │       └───src
+    │               Error.php
+    │               Result.php
+    │               Success.php
+    │               
+    ├───phpoption
+    │   └───phpoption
+    │       │   composer.json
+    │       │   LICENSE
+    │       │   
+    │       └───src
+    │           └───PhpOption
+    │                   LazyOption.php
+    │                   None.php
+    │                   Option.php
+    │                   Some.php
+    │                   
+    ├───symfony
+    │   ├───polyfill-ctype
+    │   │       bootstrap.php
+    │   │       bootstrap80.php
+    │   │       composer.json
+    │   │       Ctype.php
+    │   │       LICENSE
+    │   │       README.md
+    │   │       
+    │   ├───polyfill-mbstring
+    │   │   │   bootstrap.php
+    │   │   │   bootstrap80.php
+    │   │   │   composer.json
+    │   │   │   LICENSE
+    │   │   │   Mbstring.php
+    │   │   │   README.md
+    │   │   │   
+    │   │   └───Resources
+    │   │       └───unidata
+    │   │               caseFolding.php
+    │   │               lowerCase.php
+    │   │               titleCaseRegexp.php
+    │   │               upperCase.php
+    │   │               
+    │   ├───polyfill-php80
+    │   │   │   bootstrap.php
+    │   │   │   composer.json
+    │   │   │   LICENSE
+    │   │   │   Php80.php
+    │   │   │   PhpToken.php
+    │   │   │   README.md
+    │   │   │   
+    │   │   └───Resources
+    │   │       └───stubs
+    │   │               Attribute.php
+    │   │               PhpToken.php
+    │   │               Stringable.php
+    │   │               UnhandledMatchError.php
+    │   │               ValueError.php
+    │   │               
+    │   └───var-dumper
+    │       │   .gitattributes
+    │       │   .gitignore
+    │       │   CHANGELOG.md
+    │       │   composer.json
+    │       │   LICENSE
+    │       │   phpunit.xml.dist
+    │       │   README.md
+    │       │   VarDumper.php
+    │       │   
+    │       ├───.github
+    │       │   │   PULL_REQUEST_TEMPLATE.md
+    │       │   │   
+    │       │   └───workflows
+    │       │           close-pull-request.yml
+    │       │           
+    │       ├───Caster
+    │       │       AmqpCaster.php
+    │       │       ArgsStub.php
+    │       │       Caster.php
+    │       │       ClassStub.php
+    │       │       ConstStub.php
+    │       │       CutArrayStub.php
+    │       │       CutStub.php
+    │       │       DateCaster.php
+    │       │       DoctrineCaster.php
+    │       │       DOMCaster.php
+    │       │       DsCaster.php
+    │       │       DsPairStub.php
+    │       │       EnumStub.php
+    │       │       ExceptionCaster.php
+    │       │       FiberCaster.php
+    │       │       FrameStub.php
+    │       │       GmpCaster.php
+    │       │       ImagineCaster.php
+    │       │       ImgStub.php
+    │       │       IntlCaster.php
+    │       │       LinkStub.php
+    │       │       MemcachedCaster.php
+    │       │       MysqliCaster.php
+    │       │       PdoCaster.php
+    │       │       PgSqlCaster.php
+    │       │       ProxyManagerCaster.php
+    │       │       RdKafkaCaster.php
+    │       │       RedisCaster.php
+    │       │       ReflectionCaster.php
+    │       │       ResourceCaster.php
+    │       │       SplCaster.php
+    │       │       StubCaster.php
+    │       │       SymfonyCaster.php
+    │       │       TraceStub.php
+    │       │       UuidCaster.php
+    │       │       XmlReaderCaster.php
+    │       │       XmlResourceCaster.php
+    │       │       
+    │       ├───Cloner
+    │       │       AbstractCloner.php
+    │       │       ClonerInterface.php
+    │       │       Cursor.php
+    │       │       Data.php
+    │       │       DumperInterface.php
+    │       │       Stub.php
+    │       │       VarCloner.php
+    │       │       
+    │       ├───Command
+    │       │   │   ServerDumpCommand.php
+    │       │   │   
+    │       │   └───Descriptor
+    │       │           CliDescriptor.php
+    │       │           DumpDescriptorInterface.php
+    │       │           HtmlDescriptor.php
+    │       │           
+    │       ├───Dumper
+    │       │   │   AbstractDumper.php
+    │       │   │   CliDumper.php
+    │       │   │   ContextualizedDumper.php
+    │       │   │   DataDumperInterface.php
+    │       │   │   HtmlDumper.php
+    │       │   │   ServerDumper.php
+    │       │   │   
+    │       │   └───ContextProvider
+    │       │           CliContextProvider.php
+    │       │           ContextProviderInterface.php
+    │       │           RequestContextProvider.php
+    │       │           SourceContextProvider.php
+    │       │           
+    │       ├───Exception
+    │       │       ThrowingCasterException.php
+    │       │       
+    │       ├───Resources
+    │       │   ├───bin
+    │       │   │       var-dump-server
+    │       │   │       
+    │       │   ├───css
+    │       │   │       htmlDescriptor.css
+    │       │   │       
+    │       │   ├───functions
+    │       │   │       dump.php
+    │       │   │       
+    │       │   └───js
+    │       │           htmlDescriptor.js
+    │       │           
+    │       ├───Server
+    │       │       Connection.php
+    │       │       DumpServer.php
+    │       │       
+    │       ├───Test
+    │       │       VarDumperTestTrait.php
+    │       │       
+    │       └───Tests
+    │           ├───Caster
+    │           │       CasterTest.php
+    │           │       DateCasterTest.php
+    │           │       DoctrineCasterTest.php
+    │           │       ExceptionCasterTest.php
+    │           │       FiberCasterTest.php
+    │           │       GmpCasterTest.php
+    │           │       IntlCasterTest.php
+    │           │       MemcachedCasterTest.php
+    │           │       MysqliCasterTest.php
+    │           │       PdoCasterTest.php
+    │           │       RdKafkaCasterTest.php
+    │           │       RedisCasterTest.php
+    │           │       ReflectionCasterTest.php
+    │           │       SplCasterTest.php
+    │           │       StubCasterTest.php
+    │           │       SymfonyCasterTest.php
+    │           │       XmlReaderCasterTest.php
+    │           │       
+    │           ├───Cloner
+    │           │       DataTest.php
+    │           │       VarClonerTest.php
+    │           │       
+    │           ├───Command
+    │           │   │   ServerDumpCommandTest.php
+    │           │   │   
+    │           │   └───Descriptor
+    │           │           CliDescriptorTest.php
+    │           │           HtmlDescriptorTest.php
+    │           │           
+    │           ├───Dumper
+    │           │   │   CliDumperTest.php
+    │           │   │   ContextualizedDumperTest.php
+    │           │   │   FunctionsTest.php
+    │           │   │   HtmlDumperTest.php
+    │           │   │   ServerDumperTest.php
+    │           │   │   
+    │           │   ├───ContextProvider
+    │           │   │       RequestContextProviderTest.php
+    │           │   │       
+    │           │   └───functions
+    │           │           dump_data_collector_with_spl_array.phpt
+    │           │           
+    │           ├───Fixtures
+    │           │       BackedEnumFixture.php
+    │           │       DateTimeChild.php
+    │           │       dumb-var.php
+    │           │       dump_server.php
+    │           │       ExtendsReflectionTypeFixture.php
+    │           │       FooInterface.php
+    │           │       GeneratorDemo.php
+    │           │       LotsOfAttributes.php
+    │           │       MyAttribute.php
+    │           │       NotLoadableClass.php
+    │           │       Php74.php
+    │           │       Php81Enums.php
+    │           │       ReflectionIntersectionTypeFixture.php
+    │           │       ReflectionNamedTypeFixture.php
+    │           │       ReflectionUnionTypeFixture.php
+    │           │       ReflectionUnionTypeWithIntersectionFixture.php
+    │           │       Twig.php
+    │           │       UnitEnumFixture.php
+    │           │       xml_reader.xml
+    │           │       
+    │           ├───Server
+    │           │       ConnectionTest.php
+    │           │       
+    │           └───Test
+    │                   VarDumperTestTraitTest.php
+    │                   
+    └───vlucas
+        └───phpdotenv
+            │   composer.json
+            │   LICENSE
+            │   
+            └───src
+                │   Dotenv.php
+                │   Validator.php
+                │   
+                ├───Exception
+                │       ExceptionInterface.php
+                │       InvalidEncodingException.php
+                │       InvalidFileException.php
+                │       InvalidPathException.php
+                │       ValidationException.php
+                │       
+                ├───Loader
+                │       Loader.php
+                │       LoaderInterface.php
+                │       Resolver.php
+                │       
+                ├───Parser
+                │       Entry.php
+                │       EntryParser.php
+                │       Lexer.php
+                │       Lines.php
+                │       Parser.php
+                │       ParserInterface.php
+                │       Value.php
+                │       
+                ├───Repository
+                │   │   AdapterRepository.php
+                │   │   RepositoryBuilder.php
+                │   │   RepositoryInterface.php
+                │   │   
+                │   └───Adapter
+                │           AdapterInterface.php
+                │           ApacheAdapter.php
+                │           ArrayAdapter.php
+                │           EnvConstAdapter.php
+                │           GuardedWriter.php
+                │           ImmutableWriter.php
+                │           MultiReader.php
+                │           MultiWriter.php
+                │           PutenvAdapter.php
+                │           ReaderInterface.php
+                │           ReplacingWriter.php
+                │           ServerConstAdapter.php
+                │           WriterInterface.php
+                │           
+                ├───Store
+                │   │   FileStore.php
+                │   │   StoreBuilder.php
+                │   │   StoreInterface.php
+                │   │   StringStore.php
+                │   │   
+                │   └───File
+                │           Paths.php
+                │           Reader.php
+                │           
+                └───Util
+                        Regex.php
+                        Str.php
+                        
